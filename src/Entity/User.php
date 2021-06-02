@@ -4,11 +4,15 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Ramsey\Uuid\Uuid;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ORM\HasLifecycleCallbacks()
+ * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -29,11 +33,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $roles = [];
 
+	/**
+	 * @ORM\Column(type="string", length=36, unique=true)
+	 */
+	private $uuid;
+
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
     private $password;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime")
+     */
+    private $create_datetime;
+
+    /**
+     * @var \Datetime
+     * @ORM\Column(type="datetime")
+     */
+    private $update_datetime;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isVerified = false;
 
     public function getId(): ?int
     {
@@ -97,6 +123,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * @return mixed
+     */
+    public function getUuid()
+    {
+        return $this->uuid;
+    }
+
+    /**
+     * @param mixed $uuid
+     */
+    protected function setUuid($uuid): void
+    {
+        $this->uuid = $uuid;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreateDatetime(): \DateTime
+    {
+        return $this->create_datetime;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreateDatetime(): void
+    {
+        $this->create_datetime = new \DateTime();
+    }
+
+    /**
+     * @return \Datetime
+     */
+    public function getUpdateDatetime(): \Datetime
+    {
+        return $this->update_datetime;
+    }
+
+    /**
+     * It mmust be public for the doctrine lifecycle
+     * callback to handle.
+     * @ORM\PreUpdate
+     * @ORM\PrePersist
+     */
+    public function setUpdateDatetime(): void
+    {
+        $this->update_datetime = new \DateTime();
+    }
+
+    public static function create(): User
+    {
+        $newUser = new self();
+        $newUser->setUuid(Uuid::uuid4()->toString());
+        //$newUser->setCreateDatetime(new \Datetime());
+        //$newUser->setUpdateDatetime(new \Datetime());
+        return $newUser;
+    }
+
+    /**
      * Returning a salt is only needed, if you are not using a modern
      * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
      *
@@ -114,5 +200,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
     }
 }
