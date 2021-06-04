@@ -61,6 +61,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $isVerified = false;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Profile::class, mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $profile;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -210,6 +215,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): self
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getUsername(): ?Profile
+    {
+        return $this->username;
+    }
+
+    public function setUsername(Profile $username): self
+    {
+        // set the owning side of the relation if necessary
+        if ($username->getUserId() !== $this) {
+            $username->setUserId($this);
+        }
+
+        $this->username = $username;
 
         return $this;
     }
