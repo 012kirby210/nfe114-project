@@ -1,0 +1,20 @@
+.bordered {
+    border: 2px solid ;
+    border-radius: 2rem;
+    border-color: #8A82FF44;
+}
+.uuid-dimension{
+    width: 36rem;
+    height: 2rem;
+}
+.user-password-dimension{
+    width: 10rem;
+    height: 2rem;
+}
+.picture-max-width {
+    max-width:100px;
+}
+.avatar-pencil-position {
+    bottom: 1rem;
+    right: 2rem;
+}

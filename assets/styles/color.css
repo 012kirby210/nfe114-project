@@ -1,0 +1,30 @@
+.color-blue, .color-text, .color-action {
+    color: #85A0FF;
+}
+.color-violet, .color-active, .color-selected{
+    color: #DA79E8;
+}
+.color-nuance {
+    color:#8A82FF44;
+}
+.color-jaune, .color-link {
+    color:#ffc97f99;
+}
+.color-rouge {
+    color:#ff6551ff;
+}
+.border-color-blue {
+    border-color: #85A0FF;
+}
+.border-color-violet {
+    border-color: #DA79E8;
+}
+.border-color-nuance {
+    border-color: #8A82FF7E;
+}
+.border-color-jaune {
+    border-color:#ffc97f99;
+}
+.border-color-rouge {
+    border-color:#ff6551ff;
+}
