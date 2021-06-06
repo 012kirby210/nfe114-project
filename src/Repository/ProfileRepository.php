@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Profile;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -17,6 +18,18 @@ class ProfileRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Profile::class);
+    }
+
+    public function getProfileByUser(User $user)
+    {
+        $qbuilder = $this->createQueryBuilder('profile')
+            ->where('profile.user = :user')
+            ->setParameter('user',$user);
+
+        $query = $qbuilder->getQuery();
+
+        $profile = $query->setMaxResults(1)->getOneOrNullResult();
+        return $profile;
     }
 
     // /**
