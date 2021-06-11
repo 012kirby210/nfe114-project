@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conversations{% endblock %}
+
+{% block body %}
+    <div class="flex-row full-width justify-space-between conversation-container">
+    {% block menu %}
+        <div class="flex-col width-30 padding-md conversation-menu-container justify-start">
+            <button data-href="{{ path('nouvelle_conversation') }}"
+                    id="button-nouvelle-conversation"
+                    class="font-size-link font-alata upper-case color-blue button padding-md profile-update-button"
+            >Nouvelle conversation</button>
+        </div>
+    {% endblock %}
+    {% block contenu %}
+        <div id="conversation-contenu-container" class="flex-col width-70 padding-md conversation-contenu-container justify-start">
+            <div class="to-be-replaced not-displayed"></div>
+        </div>
+    {% endblock %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('conversation') }}
+{% endblock %}
