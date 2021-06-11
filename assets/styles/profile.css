@@ -18,3 +18,6 @@
     bottom: 1rem;
     right: 2rem;
 }
+.profile-update-button {
+    -webkit-appearance: none;
+}

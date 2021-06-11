@@ -10,18 +10,26 @@
     <div class="profile-container flex-col align-start justify-space-around full-width">
         <div class="title font-roboto font-size-title text-align-center margin-horizontal-center
             margin-top-md margin-bottom-lg">Profile</div>
-        <div class="flex-row justify-space-between align-start full-width">
-            <div class="flex-col width-30 justify-space-around align-center padding-sm text-align-center box-sizing-border">
-                <div class="picture-container padding-md margin-auto text-align-center position-relative box-sizing-content bordered ">
-                    {% if profile_form.picture | length > 0 %}
-                    <img src="{{ asset('uploads/avatar/' ~ profile_form.picture) }}"
-                         class="width-50">
+        <div class="flex-row justify-space-between full-width">
+            <div class="flex-col width-30 justify-space-between align-center padding-sm text-align-center box-sizing-border">
+                <div class="picture-container padding-md margin-horizontal-center text-align-center position-relative box-sizing-border bordered ">
+                    {% if picture | length > 0 %}
+                    <img src="{{ asset('uploads/' ~ picture) }}"
+                         class="profile-picture width-50 displayed">
                     {% endif %}
-                    {% if profile_form.picture | length == 0 %}
+                    {% if picture | length == 0 %}
                     <img src="{{ asset('build/images/avatar_default_512px.png') }}"
-                         class="width-50">
+                         class="profile-picture width-50 displayed">
                     {% endif %}
+                    <form action="{{ path('upload_profile_picture') }}"
+                          method="POST"
+                          enctype="multipart/form-data"
+                          class="dropzone not-displayed padding-md margin-horizontal-center text-align-center position-relative box-sizing-border bordered"></form>
                     <div class="position-absolute avatar-pencil-position font-size-20 icon-action color-blue"><i class="icon-pencil"></i></div>
+                </div>
+                <div class="uuid-container padding-md text-align-left box-sizing-border bordered flex-col align-start">
+                    <span class="font-size-label color-nuance font-condensed capitalized">Identifiant</span>
+                    <span class="font-size-label color-black font-condensed upper-case">{{ uuid }}</span>
                 </div>
                 <!-- données uuid et données stockage -->
             </div>
@@ -36,8 +44,11 @@
                             })
                         }}
                         {{ form_widget(profile_form.lastName,{
-                            'attr': { 'class': 'font-size-text color-blue border-none font-roboto capitalized rounded-border'},
-                            'value': 'the value'
+                            'attr': {
+                                'class': 'font-size-text color-blue border-none font-roboto capitalized rounded-border',
+                                'placeholder': 'Nom'
+                            },
+                            'value': profile_form.vars.value.lastName,
                         }) }}
                     </div>
                     <div class="flex-col justify-start align-start text-align-left form-text-field-container padding-top-sm">
@@ -48,8 +59,11 @@
                             })
                         }}
                         {{ form_widget(profile_form.firstName,{
-                            'attr': { 'class': 'font-size-text color-blue border-none font-roboto capitalized rounded-border'},
-                            'value': 'the value'
+                            'attr': {
+                                'class': 'font-size-text color-blue border-none font-roboto capitalized rounded-border',
+                                'placeholder': 'Prénom'
+                            },
+                            'value': profile_form.vars.value.firstName
                         }) }}
                     </div>
                     <div class="flex-col justify-start align-start text-align-left form-text-field-container padding-top-sm">
@@ -60,7 +74,9 @@
                             })
                         }}
                         {{ form_widget(profile_form.user.email,{
-                            'attr': { 'class': 'font-size-text color-blue border-none font-roboto rounded-border'},
+                            'attr': {
+                                'class': 'font-size-text color-blue border-none font-roboto rounded-border',
+                                'placeholder': 'Email'},
                             'value': profile_form.user.vars.value.email
                         }) }}
                     </div>
@@ -72,7 +88,9 @@
                             })
                         }}
                         {{ form_widget(profile_form.username,{
-                            'attr': { 'class': 'font-size-text color-blue border-none font-roboto rounded-border'},
+                            'attr': {
+                                'class': 'font-size-text color-blue border-none font-roboto rounded-border',
+                                'placeholder': 'Nom d\'utilisateur'},
                             'value': profile_form.vars.value.username
                         }) }}
                     </div>
@@ -84,11 +102,25 @@
                             })
                         }}
                         {{ form_widget(profile_form.user.password,{
-                            'attr': { 'class': 'font-size-text color-blue border-none font-roboto rounded-border'},
-                            'value': profile_form.user.vars.value.password
+                            'attr': {
+                                'class': 'font-size-text color-blue border-none font-roboto rounded-border',
+                                'placeholder':'Mot de passe'},
+                            'value':profile_form.user.vars.value.password
                         }) }}
+
                     </div>
-                    {{ form_end(profile_form,{'render_rest':false}) }}
+                    <div class="flex-col justify-start align-start text-align-left form-button-container padding-top-md">
+                        <div>
+                        {{ form_widget(profile_form.update, {
+                            'attr': {
+                                'class': 'font-size-link fonct-alata upper-case color-blue button padding-md profile-update-button'
+                            },
+                            'label': 'Mettre à jour'
+                        }) }}
+                        </div>
+                    </div>
+
+                    {{ form_end(profile_form) }}
                 </div>
             </div>
             {#  <div class="flex-col">

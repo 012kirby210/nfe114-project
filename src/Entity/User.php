@@ -142,7 +142,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @param mixed $uuid
      */
-    protected function setUuid($uuid): void
+    public function setUuid($uuid): void
     {
         $this->uuid = $uuid;
     }

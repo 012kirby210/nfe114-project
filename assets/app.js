@@ -12,6 +12,9 @@ import './styles/structure.css';
 import './styles/spacers.css';
 import './styles/color.css';
 import './styles/runtime.css';
+import './styles/widgets.css';
+import './styles/effect.css';
 
 // start the Stimulus application
 import './bootstrap';
+

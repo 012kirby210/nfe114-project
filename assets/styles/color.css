@@ -5,13 +5,16 @@
     color: #DA79E8;
 }
 .color-nuance {
-    color:#8A82FF44;
+    color:#8A82FF77;
 }
 .color-jaune, .color-link {
     color:#ffc97f99;
 }
 .color-rouge {
     color:#ff6551ff;
+}
+.color-black {
+    color:#333333FF;
 }
 .border-color-blue {
     border-color: #85A0FF;
@@ -20,7 +23,7 @@
     border-color: #DA79E8;
 }
 .border-color-nuance {
-    border-color: #8A82FF7E;
+    border-color: #8A82FF44;
 }
 .border-color-jaune {
     border-color:#ffc97f99;

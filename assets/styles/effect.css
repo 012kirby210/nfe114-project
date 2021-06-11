@@ -1,0 +1,6 @@
+.displayed {
+    display: inline-block;
+}
+.not-displayed {
+    display:none;
+}
