@@ -41,6 +41,10 @@ apt install net-tools
 ifconfig
 ```
 Noter la valeur de l'adresse ip de l'eth0 et renseignez la dans le fichier .env à la place de host.docker.internal. 
+* Migrer la structure de base de données :
+```sh
+docker-compose exec php_fpm /app/bin/console doctrine:migrations:migrate
+```
 * Renseignez une adresse d'envoi de courriel valide dans ce même fichier .env,  
 une ligne utilisant gmail ressemble à MAILER_DSN=smtp://LENOMDUCOMPTE@gmail.com:LEMOTDEPASSEDUCOMPTE@smtp.gmail.com:587
 * installer les modules nodes :
