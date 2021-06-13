@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProfileRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -55,6 +57,21 @@ class Profile
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $lastName;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Conversation::class, mappedBy="proprietaire", cascade={"persist", "remove"})
+     */
+    private $conversation;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Conversation::class, mappedBy="proprietaire")
+     */
+    private $conversations;
+
+    public function __construct()
+    {
+        $this->conversations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -141,6 +158,53 @@ class Profile
     public function setLastName(?string $lastName): self
     {
         $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function getConversation(): ?Conversation
+    {
+        return $this->conversation;
+    }
+
+    public function setConversation(Conversation $conversation): self
+    {
+        // set the owning side of the relation if necessary
+        if ($conversation->getProprietaire() !== $this) {
+            $conversation->setProprietaire($this);
+        }
+
+        $this->conversation = $conversation;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Conversation[]
+     */
+    public function getConversations(): Collection
+    {
+        return $this->conversations;
+    }
+
+    public function addConversation(Conversation $conversation): self
+    {
+        if (!$this->conversations->contains($conversation)) {
+            $this->conversations[] = $conversation;
+            $conversation->setProprietaire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConversation(Conversation $conversation): self
+    {
+        if ($this->conversations->removeElement($conversation)) {
+            // set the owning side to null (unless already changed)
+            if ($conversation->getProprietaire() === $this) {
+                $conversation->setProprietaire(null);
+            }
+        }
 
         return $this;
     }

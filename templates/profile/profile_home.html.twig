@@ -4,7 +4,6 @@
     {{ parent() }}
     {{ encore_entry_link_tags('profile') }}
 {% endblock %}
-
 {% block body %}
 
     <div class="profile-container flex-col align-start justify-space-around full-width">
@@ -113,7 +112,7 @@
                         <div>
                         {{ form_widget(profile_form.update, {
                             'attr': {
-                                'class': 'font-size-link fonct-alata upper-case color-blue button padding-md profile-update-button'
+                                'class': 'font-size-link font-alata upper-case color-blue button padding-md profile-update-button'
                             },
                             'label': 'Mettre à jour'
                         }) }}
@@ -126,6 +125,11 @@
             {#  <div class="flex-col">
                 <div class="profil-form-label">{{ form_label(profile_form.nom) }}</div>
             </div>#}
+        </div>
+    </div>
+    <div class="profile-menu-container flex-row justify-space-around margin-md">
+        <div>
+            <a href="{{ path('conversation') }}">Conversations</a>
         </div>
     </div>
 
