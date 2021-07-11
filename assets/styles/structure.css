@@ -1,6 +1,9 @@
 .width-100 {
     width: 100%;
 }
+.width-97 {
+    width:97%;
+}
 .width-90 {
     width: 90%;
 }
@@ -27,6 +30,9 @@
 }
 .width-10 {
     width:10%;
+}
+.width-03 {
+    width:3%;
 }
 .full-width {
     width: 100%;
@@ -88,4 +94,7 @@
 }
 .rounded-border {
     border-radius: 2rem;
+}
+.min-height-2rem{
+    min-height:2rem;
 }

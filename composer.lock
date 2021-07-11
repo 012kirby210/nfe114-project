@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "52153a628e001ea36b48fefe0c05537e",
+    "content-hash": "efa82f95d90c7a7b3a340c966e073606",
     "packages": [
         {
             "name": "brick/math",
@@ -8847,6 +8847,72 @@
                 }
             ],
             "time": "2021-03-23T07:16:29+00:00"
+        },
+        {
+            "name": "ramsey/uuid-console",
+            "version": "1.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ramsey/uuid-console.git",
+                "reference": "059e02151488f2eb3904e8bbdc67f0693efc10a3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ramsey/uuid-console/zipball/059e02151488f2eb3904e8bbdc67f0693efc10a3",
+                "reference": "059e02151488f2eb3904e8bbdc67f0693efc10a3",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.4 || ^7 || ^8",
+                "ramsey/uuid": "^3 || ^4",
+                "symfony/console": "^2.7 || ^3 || ^4 || ^5"
+            },
+            "require-dev": {
+                "jakub-onderka/php-parallel-lint": "^1",
+                "moontoast/math": "^1.1",
+                "phpunit/phpunit": "^4.8.36 || ^5.7 || ^6.5 || ^7",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "bin": [
+                "bin/uuid"
+            ],
+            "type": "project",
+            "autoload": {
+                "psr-4": {
+                    "Ramsey\\Uuid\\Console\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ben Ramsey",
+                    "email": "ben@benramsey.com",
+                    "homepage": "http://benramsey.com"
+                }
+            ],
+            "description": "A console application for generating UUIDs with ramsey/uuid.",
+            "homepage": "https://github.com/ramsey/uuid-console",
+            "keywords": [
+                "cli",
+                "console",
+                "guid",
+                "identifier",
+                "uuid"
+            ],
+            "support": {
+                "issues": "https://github.com/ramsey/uuid-console/issues",
+                "source": "https://github.com/ramsey/uuid-console"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/ramsey",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-07-16T17:13:07+00:00"
         },
         {
             "name": "sebastian/cli-parser",

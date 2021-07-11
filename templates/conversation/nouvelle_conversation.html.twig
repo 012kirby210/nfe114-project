@@ -1,6 +1,10 @@
 {{ form_start(nouvelle_conversation_form,{'method':'POST',
     'class':'nouvelle-conversation-form-container',
-    'data-href': path('nouvelle_conversation')
+    'action': path('creer_conversation'),
+    'attr':{
+        'id': 'nouvelle_conversation_form',
+        'data-href': path('creer_conversation'),
+    }
     }) }}
     <div class="flex-col justify-start align-start text-align-left form-text-field-container padding-top-sm">
         {{ form_label(nouvelle_conversation_form.titre,null,
@@ -14,7 +18,7 @@
                 'class': 'font-size-text color-blue border-none font-roboto capitalized rounded-border',
                 'placeholder': 'Titre'
             },
-            'value': nouvelle_conversation_form.vars.value.titre,
+            'value': nouvelle_conversation_form.titre.vars.value,
         }) }}
     </div>
     <div class="flex-col justify-start align-start text-align-left form-text-field-container padding-top-sm">

@@ -4,14 +4,22 @@
 
 {% block body %}
     <div class="flex-row full-width justify-space-between conversation-container">
-    {% block menu %}
         <div class="flex-col width-30 padding-md conversation-menu-container justify-start">
-            <button data-href="{{ path('nouvelle_conversation') }}"
-                    id="button-nouvelle-conversation"
-                    class="font-size-link font-alata upper-case color-blue button padding-md profile-update-button"
-            >Nouvelle conversation</button>
+        {% block menu %}
+            <section>
+                <button data-href="{{ path('nouvelle_conversation') }}"
+                        id="button-nouvelle-conversation"
+                        class="font-size-link font-alata upper-case color-blue button padding-md profile-update-button"
+                >Nouvelle conversation</button>
+            </section>
+        {% endblock %}
+        {% block conversations %}
+            <section id="conversations-listing-id">
+
+            </section>
+        {% endblock %}
         </div>
-    {% endblock %}
+
     {% block contenu %}
         <div id="conversation-contenu-container" class="flex-col width-70 padding-md conversation-contenu-container justify-start">
             <div class="to-be-replaced not-displayed"></div>

@@ -177,6 +177,9 @@
     "ramsey/uuid": {
         "version": "4.1.1"
     },
+    "ramsey/uuid-console": {
+        "version": "1.1.4"
+    },
     "sebastian/cli-parser": {
         "version": "1.0.1"
     },

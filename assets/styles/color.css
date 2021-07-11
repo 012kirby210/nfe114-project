@@ -31,3 +31,8 @@
 .border-color-rouge {
     border-color:#ff6551ff;
 }
+.blue-tag{
+    border: 1px solid #85A0FF;
+    background-color: #85A0FF;
+
+}

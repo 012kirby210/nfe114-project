@@ -59,18 +59,31 @@ class Profile
     private $lastName;
 
     /**
-     * @ORM\OneToOne(targetEntity=Conversation::class, mappedBy="proprietaire", cascade={"persist", "remove"})
-     */
-    private $conversation;
-
-    /**
      * @ORM\OneToMany(targetEntity=Conversation::class, mappedBy="proprietaire")
      */
-    private $conversations;
+    private $ownedConversations;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Invitation::class, mappedBy="host")
+     */
+    private $sentInvitations;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Invitation::class, mappedBy="guest")
+     */
+    private $receivedInvitations;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Conversation::class, mappedBy="participants")
+     */
+    private $participatingConversations;
 
     public function __construct()
     {
-        $this->conversations = new ArrayCollection();
+        $this->ownedConversations = new ArrayCollection();
+        $this->sentInvitations = new ArrayCollection();
+        $this->receivedInvitations = new ArrayCollection();
+        $this->participatingConversations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -162,19 +175,84 @@ class Profile
         return $this;
     }
 
-    public function getConversation(): ?Conversation
+    /**
+     * @return Collection|Conversation[]
+     */
+    public function getOwnedConversations(): Collection
     {
-        return $this->conversation;
+        return $this->ownedConversations;
     }
 
-    public function setConversation(Conversation $conversation): self
+    public function addOwnedConversation(Conversation $conversation): self
     {
-        // set the owning side of the relation if necessary
-        if ($conversation->getProprietaire() !== $this) {
+        if (!$this->ownedConversations->contains($conversation)) {
+            $this->ownedConversations[] = $conversation;
             $conversation->setProprietaire($this);
         }
+        if (!$this->participatingConversations->contains($conversation)){
+            $this->participatingConversations[] = $conversation;
+            $conversation->addParticipant($this);
+        }
 
-        $this->conversation = $conversation;
+        return $this;
+    }
+
+    /**
+     * @return Collection|Invitation[]
+     */
+    public function getSentInvitations(): Collection
+    {
+        return $this->sentInvitations;
+    }
+
+    public function addSentInvitation(Invitation $sentInvitation): self
+    {
+        if (!$this->sentInvitations->contains($sentInvitation)) {
+            $this->sentInvitations[] = $sentInvitation;
+            $sentInvitation->setHost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSentInvitation(Invitation $sentInvitation): self
+    {
+        if ($this->sentInvitations->removeElement($sentInvitation)) {
+            // set the owning side to null (unless already changed)
+            if ($sentInvitation->getHost() === $this) {
+                $sentInvitation->setHost(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Invitation[]
+     */
+    public function getReceivedInvitations(): Collection
+    {
+        return $this->receivedInvitations;
+    }
+
+    public function addReceivedInvitation(Invitation $receivedInvitation): self
+    {
+        if (!$this->receivedInvitations->contains($receivedInvitation)) {
+            $this->receivedInvitations[] = $receivedInvitation;
+            $receivedInvitation->setGuest($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReceivedInvitation(Invitation $receivedInvitation): self
+    {
+        if ($this->receivedInvitations->removeElement($receivedInvitation)) {
+            // set the owning side to null (unless already changed)
+            if ($receivedInvitation->getGuest() === $this) {
+                $receivedInvitation->setGuest(null);
+            }
+        }
 
         return $this;
     }
@@ -182,28 +260,25 @@ class Profile
     /**
      * @return Collection|Conversation[]
      */
-    public function getConversations(): Collection
+    public function getParticipatingConversations(): Collection
     {
-        return $this->conversations;
+        return $this->participatingConversations;
     }
 
-    public function addConversation(Conversation $conversation): self
+    public function addParticipatingConversation(Conversation $participatingConversation): self
     {
-        if (!$this->conversations->contains($conversation)) {
-            $this->conversations[] = $conversation;
-            $conversation->setProprietaire($this);
+        if (!$this->participatingConversations->contains($participatingConversation)) {
+            $this->participatingConversations[] = $participatingConversation;
+            $participatingConversation->addParticipant($this);
         }
 
         return $this;
     }
 
-    public function removeConversation(Conversation $conversation): self
+    public function removeParticipatingConversation(Conversation $participatingConversation): self
     {
-        if ($this->conversations->removeElement($conversation)) {
-            // set the owning side to null (unless already changed)
-            if ($conversation->getProprietaire() === $this) {
-                $conversation->setProprietaire(null);
-            }
+        if ($this->participatingConversations->removeElement($participatingConversation)) {
+            $participatingConversation->removeParticipant($this);
         }
 
         return $this;
