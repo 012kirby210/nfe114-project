@@ -1,0 +1,32 @@
+{% for invitation in invitations %}
+{% set border_color_mark="jaune-tag" %}
+{% set picture_file_path="/public/build/images/avatar_default_512px.dd61314f.png" %}
+{% if invitation.etat == "accepted" %}
+    {% set border_color_mark="vert-tag" %}
+{% endif %}
+<div id="invitation-sending-container-id" class="flex-row justify-start full-width margin-bottom-md margin-top-lg">
+    <div class="flex-col width-03 {{ border_color_mark }} box-sizing-border">
+
+    </div>
+    <div class="flex-col width-97 box-sizing-border">
+        <div class="flex-row justify-space-between align-center text-align-left padding-top-sm padding-left-sm ">
+            <figure>
+
+                {% if invitation.guest.picture|length == 0 %}
+                    {% set picture_file_path="/public/uploads/"~invitation.guest.picture %}
+                {% endif %}
+                <img src="{{ asset(picture_file_path) }}"/>
+            </figure>
+            <div>
+                {{ invitation.guest.first_name ~ " " ~ invitation.guest.last_name }}
+            </div>
+            {% if invitation.etat == "pending" %}
+                <div class="flex-row justify-start align-start text-align-center">
+                    En attente
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+{% endfor %}

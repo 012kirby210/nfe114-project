@@ -107,6 +107,7 @@ let Conversations = {
       invitationSendingButton.addEventListener('click',(event) => {
          event.preventDefault();
          event.stopPropagation();
+         let eventTarget = event.target;
          event.target.setAttribute('disabled','');
          let participantUuid = document.querySelector('#invitation_sending_form_guest_uuid').value;
          $.ajax(event.target.getAttribute('data-href'),{
@@ -121,7 +122,12 @@ let Conversations = {
             },
             error: (jqXHR, textStatus,errorThrown) => {
                let errorResponse = jqXHR.responseJSON;
+               let html = errorResponse.html;
                console.log(errorResponse.error);
+               let invitationSendingContainerElement = document.querySelector('#invitation-sending-container-id');
+               $(invitationSendingContainerElement).replaceWith(html);
+               eventTarget.removeAttribute('disabled');
+               Conversations.setUpdateConversationAjaxLogicHandler();
 
             }
          })

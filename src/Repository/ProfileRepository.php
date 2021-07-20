@@ -32,6 +32,14 @@ class ProfileRepository extends ServiceEntityRepository
         return $profile;
     }
 
+    public function getProfileByIds(array $guestIds){
+        $qbuilder = $this->createQueryBuilder('profile')
+            ->where('profile.id in :guest_ids')
+            ->setParameter('guest_ids',$guestIds);
+
+        $query = $qbuilder->getQuery();
+        return $query->getResult();
+    }
     // /**
     //  * @return Profile[] Returns an array of Profile objects
     //  */

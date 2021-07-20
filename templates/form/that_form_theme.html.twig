@@ -1,0 +1,95 @@
+{% block text_widget %}
+    {% set type = "text" %}
+    <div class="flex-col justify-start align-start text-align-left form-text-field-container padding-top-sm padding-left-sm full-width">
+        <input {{ block('widget_attributes') }} type="{{ type }}" {% if value is not empty %} value="{{ value }}" {% endif %}/>
+    </div>
+{% endblock %}
+{% block form_errors %}
+    <div class="flex-col justify-start align-start text-align-left form-error-field-container padding-top-sm padding-left-sm ">
+        {% if errors|length > 0 %}
+        <ul {{ block('error_container_attribute') }}>
+            {% for error in errors %}
+                <li class="li-none color-rouge font-inter font-size-error letter-spacing-md" {{ block('error_item_attribute') }}>{{ error.message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block submit_widget %}
+<div class="flex-col justify-start align-start text-align-left form-error-field-container padding-top-sm padding-left-sm rounded-border">
+    {% set type =  type|default("submit") %}
+    {{ block('button_widget') }}
+</div>
+{% endblock %}
+
+{% block button_widget %}
+    {%- if label is empty -%}
+        {%- if label_format is not empty -%}
+            {% set label = label_format|replace({
+                '%name%': name,
+                '%id%': id,
+            }) %}
+        {%- elseif label is not same as(false) -%}
+            {% set label = name|humanize %}
+        {%- endif -%}
+    {%- endif -%}
+    <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>
+        {%- if translation_domain is same as(false) -%}
+            {%- if label_html is same as(false) -%}
+                {{- label -}}
+            {%- else -%}
+                {{- label|raw -}}
+            {%- endif -%}
+        {%- else -%}
+            {%- if label_html is same as(false) -%}
+                {{- label|trans(label_translation_parameters, translation_domain) -}}
+            {%- else -%}
+                {{- label|trans(label_translation_parameters, translation_domain)|raw -}}
+            {%- endif -%}
+        {%- endif -%}
+    </button>
+{% endblock %}
+
+{%- block widget_attributes -%}
+    id="{{ id }}" name="{{ full_name }}"
+    {%- if disabled %} disabled="disabled"{% endif -%}
+    {%- if required %} required="required"{% endif -%}
+    {% if type == "text" %}
+        {% set initial_classes = "padding-left-sm font-size-text color-blue border-color-blue font-roboto rounded-border min-height-2rem full-width" %}
+    {% endif %}
+    {{ block('attributes') }}
+{%- endblock widget_attributes -%}
+
+{% block button_attributes %}
+    id="{{ id }}" name="{{ full_name }}" {% if disabled %}disabled="disabled"{% endif %}
+    {% set initial_classes="font-alata upper-case color-blue button padding-top-md padding-bottom-md padding-left-xl padding-right-xl" %}
+    {{ block('attributes') }}
+{% endblock %}
+
+{% block attributes -%}
+    {%- for attrname, attrvalue in attr -%}
+        {{- " " -}}
+        {% set initial_classes = initial_classes|default("") %}
+        {% if attrname in ['class'] or initial_classes|length > 0 %}
+            class="{{ initial_classes ~ " " ~ attrvalue }}"
+        {% endif %}
+        {%- if attrname in ['placeholder', 'title'] -%}
+            {{- attrname }}="{{ translation_domain is same as(false) or attrvalue is null ? attrvalue : attrvalue|trans(attr_translation_parameters, translation_domain) }}"
+        {%- elseif attrvalue is same as(true) -%}
+            {{- attrname }}="{{ attrname }}"
+        {%- elseif attrvalue is not same as(false) -%}
+            {{- attrname }}="{{ attrvalue }}"
+        {%- endif -%}
+    {%- endfor -%}
+{%- endblock attributes -%}
+
+{% block error_container_attribute %}
+    {% for attr_name,attr_value in container_attr %}
+        {{- attr_name -}}="{{- attr_value -}}"
+    {% endfor %}
+{% endblock %}
+{% block error_item_attribute %}
+    {% for attr_name,attr_value in contained_attr %}
+        {{- attr_name -}}="{{- attr_value -}}"
+    {% endfor %}
+{% endblock %}

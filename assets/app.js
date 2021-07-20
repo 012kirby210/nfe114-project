@@ -14,6 +14,7 @@ import './styles/color.css';
 import './styles/runtime.css';
 import './styles/widgets.css';
 import './styles/effect.css';
+import './styles/reset.css';
 
 // start the Stimulus application
 import './bootstrap';

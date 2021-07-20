@@ -42,7 +42,7 @@ class Conversation
     private $archived;
 
     /**
-     * @ORM\OneToMany(targetEntity=Invitation::class, mappedBy="conversations")
+     * @ORM\OneToMany(targetEntity=Invitation::class, mappedBy="conversation")
      */
     private $invitations;
 
@@ -79,15 +79,17 @@ class Conversation
         return $this;
     }
 
-    public function getProprietaire(): ?profile
+    public function getProprietaire(): ?Profile
     {
         return $this->proprietaire;
     }
 
-    public function setProprietaire(?profile $proprietaire): self
+    public function setProprietaire(?Profile $proprietaire): self
     {
         $this->proprietaire = $proprietaire;
-
+        if(!$proprietaire->getOwnedConversations()->contains($this)){
+            $proprietaire->addOwnedConversation($this);
+        }
         return $this;
     }
 
@@ -132,7 +134,7 @@ class Conversation
     {
         if (!$this->invitations->contains($invitation)) {
             $this->invitations[] = $invitation;
-            $invitation->setConversations($this);
+            $invitation->setConversation($this);
         }
 
         return $this;

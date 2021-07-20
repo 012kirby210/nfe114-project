@@ -16,6 +16,12 @@
 .color-black {
     color:#333333FF;
 }
+.color-vert {
+    color: #b3e681;
+}
+.border-color-vert {
+    border-color: #b3e681;
+}
 .border-color-blue {
     border-color: #85A0FF;
 }
@@ -35,4 +41,13 @@
     border: 1px solid #85A0FF;
     background-color: #85A0FF;
 
+}
+.jaune-tag{
+    border: 1px solid #ffc97f;
+    background-color: #ffc97f;
+}
+
+.vert-tag{
+    border: 1px solid #b3e681;
+    background-color: #b3e681;
 }

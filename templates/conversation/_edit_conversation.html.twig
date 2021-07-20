@@ -1,0 +1,35 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<div class="edit-conversation-container">
+    <div class="edit-conversation-container__conversation-title">
+        <div class="flex-col justify-start align-start text-align-left form-text-field-container padding-top-sm">
+            {{ form_start(edition_conversation_form) }}
+            {{ form_label(edition_conversation_form.titre,null,
+                {
+                    'label_attr':{'class': 'color-violet font-size-label font-condensed'},
+                    'label': 'Nom : '
+                })
+            }}
+            {{ form_widget(edition_conversation_form.titre,{
+                'attr': {
+                    'class': 'font-size-text color-blue border-none font-roboto capitalized rounded-border',
+                    'placeholder': 'Titre'
+                },
+                'value': edition_conversation_form.titre.vars.value,
+            }) }}
+            {% set invitation_sending_form=edition_conversation_form.invitation_form %}
+            {{ include('invitations/_form_nouvelle_invitation.html.twig') }}
+            {{ form_widget(edition_conversation_form.valider,{
+                'label': 'Valider',
+                'attr': {
+                    'class': 'font-size-link invite-sending-button',
+                    'data-href': path('inviter_participant')
+                }
+            }) }}
+
+            {{ form_end(edition_conversation_form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

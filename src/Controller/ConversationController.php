@@ -3,19 +3,26 @@
 namespace App\Controller;
 
 use App\Entity\Conversation;
+use App\Entity\Invitation;
+use App\Form\EditionConversationFormType;
 use App\Form\InvitationSendingFormType;
 use App\Form\NouvelleConversationFormType;
+use App\Repository\InvitationRepository;
 use App\Repository\ProfileRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
+use Symfony\Component\Form\FormInterface;
 
 class ConversationController extends AbstractController
 {
@@ -39,13 +46,6 @@ class ConversationController extends AbstractController
         // get the new conversation form and restitute as an ajax response.
         $conversation = new Conversation();
         $nouvelleConversationForm = $this->createForm(NouvelleConversationFormType::class,$conversation);
-        /*$nouvelleConversationForm->handleRequest($request);
-        if ($nouvelleConversationForm->isSubmitted()){
-            $log->info('je suis submitted');
-            $nouvelleConversationForm->isValid() && $log->info('je suis validé');
-        }else{
-            $log->info('Not submited');
-        }*/
 
         $renderedTemplate = $this->render('conversation/nouvelle_conversation.html.twig', [
             'nouvelle_conversation_form' => $nouvelleConversationForm->createView()
@@ -88,6 +88,8 @@ class ConversationController extends AbstractController
                     'conversation_form' => $conversationFormulaire->createView(),
                     'conversation' => $conversation]);
 
+            // renvoyer le formulaire d'invitation + le nouvel url à pousser dans l'historique
+            // pour qu'au rechargement de la page par le client, l'état soit conservé.
             return (new JsonResponse(
                 ['html' => $invitationFormTemplate], 200));
         }
@@ -108,9 +110,38 @@ class ConversationController extends AbstractController
             $log->info('Le formulaire est envoyé');
 
         }
-        return $this->render("invitations/form_nouvelle_invitation.html.twig", [
-           'invitation_sending_form' => $envoiInvitationFormulaire->createView()
+        $envoiInvitationFormulaire->get('guest_uuid')->addError(new FormError('je suis une erreur'));
+        return $this->render("invitations/_form_nouvelle_invitation.html.twig", [
+           'invitation_sending_form' => $envoiInvitationFormulaire->createView(),
         ]);
+    }
+
+    /**
+     * @Route("montre_formulaire_edition_conversation",name="montre_formulaire_edition_conversation")
+     * @param Request $request
+     * @param InvitationRepository $invitationRepository
+     * @return Response
+     */
+    public function montreFormulaireEditConversation(Request $request,
+                                                     UserRepository $userRepository,
+                                                     ProfileRepository $profileRepository):Response
+    {
+        // the conversation Id should be specified in the request :
+        $conversationId = 19;
+        $hostUser = $userRepository->findOneBy(['email' => $this->getUser()->getUseridentifier()]);
+        $hostProfile = $profileRepository->findOneBy(['user' => $hostUser]);
+        $invitations = $hostProfile->getSentInvitations();
+        dump($invitations);
+        $editConversationForm = $this->createForm(EditionConversationFormType::class);
+        $editConversationForm->handleRequest($request);
+        if ($editConversationForm->isSubmitted()){
+            // do something ?
+        }
+        return $this->render("conversation/_edit_conversation.html.twig",
+            [
+                'edition_conversation_form' => $editConversationForm->createView(),
+                'invitations' => $invitations
+            ]);
     }
 
     /**
@@ -118,17 +149,46 @@ class ConversationController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function inviterParticipant(Request $request,EntityManagerInterface $em):Response
+    public function inviterParticipant(Request $request,
+                                       EntityManagerInterface $em,
+                                       UserRepository $userRepository,
+                                       ProfileRepository $profileRepository,
+                                       InvitationRepository $invitationRepository,
+                                       LoggerInterface $lucLogger):Response
     {
         $invitationForm = $this->createForm(InvitationSendingFormType::class);
         $invitationForm->handleRequest($request);
         if ($invitationForm->isSubmitted()){
-            $invitationFormData = $invitationForm->getData();
-            $uuid = $invitationFormData['guest_uuid'];
-            if (!Uuid::isValid($uuid)){
-                return new JsonResponse(['error' => 'Valeur Uuid invalide.'],400);
+            if(count($invitationForm['guest_uuid']->getErrors()) !== 0){
+                $renderedTemplate = $this->renderView("invitations/partial_form_nouvelle_invitation.html.twig",
+                ['invitation_sending_form' => $invitationForm->createView()]);
+                return new JsonResponse(['html' => $renderedTemplate, 'error' => $invitationForm['guest_uuid']->getErrors()],400);
             }
 
+            $invitationFormData = $invitationForm->getData();
+            $uuid = strtolower($invitationFormData['guest_uuid']);
+            $user = $userRepository->findOneBy(['uuid' => $uuid]);
+
+            if (!$user){
+                $invitationForm->get('guest_uuid')->addError(new FormError('Utilisateur non trouvé'));
+                $renderedTemplate = $this->renderView("invitations/partial_form_nouvelle_invitation.html.twig",
+                    ['invitation_sending_form' => $invitationForm->createView()]);
+                return new JsonResponse(['html' => $renderedTemplate,'error' => 'Utilisateur non trouvé.'],404);
+            }
+
+            // user is found => we make an invite.
+            $invitation = new Invitation();
+            $hostUser = $userRepository->findOneBy(['email' => $this->getUser()->getUserIdentifier()]);
+            $hostProfile = $profileRepository->getProfileByUser($hostUser);
+            $guestProfile = $profileRepository->getProfileByUser($user);
+            $invitation->setGuest($guestProfile)->setHost($hostProfile);
+            $em->persist($invitation);
+            $em->flush();
+
+            // build the list of sent invitation
+            $invitations = $invitationRepository->getSentInvitationsBy($hostProfile);
+
+            // build the invitation sending form
         }
         return (new Response())->setStatusCode(200);
     }
@@ -141,7 +201,22 @@ class ConversationController extends AbstractController
      */
     public function updateConversation(Request $request, EntityManagerInterface $em):Response
     {
+        //
         return new Response();
     }
 
+    /**
+     * @Route("edit_conversation",name="edit_conversation")
+     * @param Request $request
+     * @return Response
+     */
+    public function editConversation(Request $request): Response
+    {
+        // construit l'interface d'édition de la conversation pour l'utilisateur :
+        // affiche le titre, le titre est modifiable pour le propriétaire de la conversation.
+
+        // affiche la liste des invitations envoyées par l'utilisateur accédant à la page et les réponses/états.
+
+        // affiche l'interface d'invitation.
+    }
 }

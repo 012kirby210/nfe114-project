@@ -9,6 +9,14 @@
     font-weight: 300;
 }
 @font-face {
+    font-family: "Inter ExtraLight";
+    src: url('../fonts/ErrorInter-ExtraLight.woff') format('woff'),
+    url("../fonts/ErrorInter-ExtraLight.woff2") format('woff2'),
+    url("../fonts/ErrorInter-ExtraLight.ttf") format('ttf');
+    font-weight: 200;
+    font-style: normal;
+}
+@font-face {
     font-family: 'icomoon';
     src:  url('../fonts/icomoon.eot?91dzgp');
     src:  url('../fonts/icomoon.eot?91dzgp#iefix') format('embedded-opentype'),
@@ -57,6 +65,9 @@
     content: "\e9ce";
 }
 
+.font-inter {
+    font-family: "Inter ExtraLight", sans-serif;
+}
 .font-roboto {
     font-family: "Roboto Light", sans-serif;
 }
@@ -82,6 +93,10 @@
     font-size: 0.875rem;
     line-height: 1rem;
 }
+.font-size-error, .font-size-xs {
+    font-size: 0.75rem;
+    line-height: 0.875rem;
+}
 .capitalized {
     text-transform: capitalize;
 }
@@ -90,4 +105,7 @@
 }
 .lower-case {
     text-transform: lowercase;
+}
+.letter-spacing-md {
+    letter-spacing: 0.1rem;
 }

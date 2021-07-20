@@ -1,0 +1,27 @@
+<div class="conversation-list-item-container">
+    <div class="conversation-list-item-container__conversation-title">
+        <div class="flex-col justify-start align-start text-align-left form-text-field-container padding-top-sm">
+            {{ form_label(conversation_form.titre,null,
+                {
+                    'label_attr':{'class': 'color-violet font-size-label font-condensed'},
+                    'label': 'Nom : '
+                })
+            }}
+            {{ form_widget(conversation_form.titre,{
+                'attr': {
+                    'class': 'font-size-text color-blue border-none font-roboto capitalized rounded-border',
+                    'placeholder': 'Titre'
+                },
+                'value': conversation_form.titre.vars.value,
+            }) }}
+        </div>
+    </div>
+    <ul class="conversation-list-item-container__participants-list">
+        {% for participant in conversation.participants %}
+            <li class="conversation-list">participant.username</li>
+        {% endfor %}
+    </ul>
+    {% block invitation_sending_form %}
+    {% endblock %}
+</div>
+

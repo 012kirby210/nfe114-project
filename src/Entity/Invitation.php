@@ -21,13 +21,13 @@ class Invitation
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=profile::class, inversedBy="sentInvitations")
+     * @ORM\ManyToOne(targetEntity=Profile::class, inversedBy="sentInvitations")
      * @ORM\JoinColumn(nullable=false)
      */
     private $host;
 
     /**
-     * @ORM\ManyToOne(targetEntity=profile::class, inversedBy="receivedInvitations")
+     * @ORM\ManyToOne(targetEntity=Profile::class, inversedBy="receivedInvitations")
      * @ORM\JoinColumn(nullable=false)
      */
     private $guest;
@@ -48,67 +48,47 @@ class Invitation
     private $commentaires;
 
     /**
-     * @ORM\ManyToOne (targetEntity=Conversation::class, inversedBy="invitations")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne (targetEntity=Conversation::class, inversedBy="invitations",)
+     * @ORM\JoinColumn(name="conversation_id",referencedColumnName="id",nullable=false)
      */
     private $conversation;
+
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
+    private $etat;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getHost(): ?profile
+    public function getHost(): ?Profile
     {
         return $this->host;
     }
 
-    public function setHost(?profile $host): self
+    public function setHost(?Profile $host): self
     {
         $this->host = $host;
-
+        if (!$host->getSentInvitations()->contains($this)){
+            $host->addSentInvitation($this);
+        }
+        
         return $this;
     }
 
-    public function getGuest(): ?profile
+    public function getGuest(): ?Profile
     {
         return $this->guest;
     }
 
-    public function setGuest(?profile $guest): self
+    public function setGuest(?Profile $guest): self
     {
         $this->guest = $guest;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Conversation[]
-     */
-    public function getConversation(): Collection
-    {
-        return $this->conversation;
-    }
-
-    public function addConversation(Conversation $conversation): self
-    {
-        if (!$this->conversation->contains($conversation)) {
-            $this->conversation[] = $conversation;
-            $conversation->setRelatedInvitations($this);
+        if ($guest->getReceivedInvitations()->contains($this)){
+            $guest->addReceivedInvitation($this);
         }
-
-        return $this;
-    }
-
-    public function removeConversation(Conversation $conversation): self
-    {
-        if ($this->conversation->removeElement($conversation)) {
-            // set the owning side to null (unless already changed)
-            if ($conversation->getRelatedInvitations() === $this) {
-                $conversation->setRelatedInvitations(null);
-            }
-        }
-
         return $this;
     }
 
@@ -148,14 +128,29 @@ class Invitation
         return $this;
     }
 
-    public function getConversations(): ?Conversation
+    public function getConversation(): ?Conversation
     {
-        return $this->conversations;
+        return $this->conversation;
     }
 
-    public function setConversations(?Conversation $conversations): self
+    public function setConversation(?Conversation $conversation): self
     {
-        $this->conversations = $conversations;
+        $this->conversation = $conversation;
+        if (!$conversation->getInvitations()->contains($this)){
+            $conversation->addInvitation($this);
+        }
+
+        return $this;
+    }
+
+    public function getEtat(): ?string
+    {
+        return $this->etat;
+    }
+
+    public function setEtat(string $etat): self
+    {
+        $this->etat = $etat;
 
         return $this;
     }

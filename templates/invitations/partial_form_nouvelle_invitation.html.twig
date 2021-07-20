@@ -1,0 +1,30 @@
+<div id="invitation-sending-container-id" class="flex-row justify-start full-width margin-bottom-md margin-top-lg">
+    <div class="flex-col width-03 blue-tag box-sizing-border">
+
+    </div>
+    <div class="flex-col width-97 box-sizing-border">
+        <div class="flex-col justify-start align-start text-align-left form-text-field-container padding-top-sm padding-left-sm ">
+            {{ form_label(invitation_sending_form.guest_uuid,null,
+                {
+                    'label_attr':{'class': 'color-violet font-size-label font-condensed'},
+                    'label': 'identifiant : '
+                })
+            }}
+            {{ form_errors(invitation_sending_form.guest_uuid) }}
+            {{ form_widget(invitation_sending_form.guest_uuid,{
+                'attr': {
+                    'class': 'font-size-text color-blue border-color-blue font-roboto rounded-border min-height-2rem full-width',
+                    'placeholder': 'identifiant du participant'
+                },
+                'value': invitation_sending_form.guest_uuid.vars.value,
+            }) }}
+            {{ form_widget(invitation_sending_form.invitation_submit,{
+                'label': 'Inviter',
+                'attr': {
+                    'class': 'font-size-link font-alata upper-case color-blue button padding-md invite-sending-button margin-top-lg',
+                    'data-href': path('inviter_participant')
+                }
+            }) }}
+        </div>
+    </div>
+</div>
