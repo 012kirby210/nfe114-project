@@ -1,10 +1,10 @@
-{% extends "base.html.twig" %}
-
-{% block body %}
 <div class="edit-conversation-container">
     <div class="edit-conversation-container__conversation-title">
         <div class="flex-col justify-start align-start text-align-left form-text-field-container padding-top-sm">
-            {{ form_start(edition_conversation_form) }}
+            {{ form_start(edition_conversation_form,
+                {'method':'POST',
+                'attr':{'class':'width-100'}}
+            ) }}
             {{ form_label(edition_conversation_form.titre,null,
                 {
                     'label_attr':{'class': 'color-violet font-size-label font-condensed'},
@@ -33,4 +33,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
+

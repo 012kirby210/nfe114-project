@@ -1,0 +1,20 @@
+{# partial which hold the anchor to the profile page #}
+{% if profile.picture | length > 0 %}
+    {% set picture_path = 'uploads/' ~ profile.picture %}
+{% endif %}
+{% if profile.picture | length == 0 %}
+    {% set picture_path = 'build/image/avatar_default_512px.png' %}
+{% endif %}
+<div class="profile-menu-anchor-container flex-row justify-start margin-bottom-md margin-top-md">
+    <figure class="profile-menu-anchor-container__picture-container flex-col justify-center width-30">
+        <img class="width-100" src="{{  asset(picture_path) }}" alt="profile-image"/>
+    </figure>
+    <div class="profile-menu-anchor-container__profile-informations flex-col justify-space-around width-70 padding-left-md">
+        <div class="profile-menu-anchor-container__profile-informations__username flex-row justify-start width-100 font-size-lg font-roboto">
+            {{ profile.username }}
+        </div>
+        <div class="profile-menu-anchor-container__profile-informations__settings-icon flex-row justify-start width-100">
+            <i class="font-size-lg color-blue icon-equalizer on-hover-subline"></i>
+        </div>
+    </div>
+</div>

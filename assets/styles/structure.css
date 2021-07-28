@@ -34,6 +34,9 @@
 .width-03 {
     width:3%;
 }
+.min-width-03 {
+    min-width:3%;
+}
 .full-width {
     width: 100%;
     min-width: 100%;
@@ -58,6 +61,9 @@
 }
 .justify-space-around {
     justify-content: space-around;
+}
+.justify-center{
+    justify-content:center;
 }
 .align-center {
     align-items: center;
@@ -95,6 +101,21 @@
 .rounded-border {
     border-radius: 0.8rem;
 }
-.min-height-2rem{
-    min-height:2rem;
+.min-height-2_5rem{
+    min-height:2.5rem;
+}
+.max-height-40vh{
+    max-height: 40vh;
+}
+.block{
+    display: block;
+}
+.inline{
+    display: block;
+}
+.inline-block{
+    display: inline-block;
+}
+.overflow-scroll{
+    overflow: scroll;
 }

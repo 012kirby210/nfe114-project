@@ -87,4 +87,5 @@ class ProfileController extends AbstractController
         $response = new Response();$response->setStatusCode(200);
         return $response;
     }
+
 }

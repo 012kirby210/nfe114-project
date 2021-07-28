@@ -14,7 +14,7 @@ class InvitationSendingFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('guest_uuid',TextType::class,['constraints' => new Uuid()])
+            ->add('guest_uuid',TextType::class,['constraints' => new Uuid(),'required'=>false])
             ->add('invitation_submit',SubmitType::class)
         ;
     }

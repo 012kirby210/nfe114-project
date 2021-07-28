@@ -5,3 +5,12 @@ ul {
     padding-left: 0;
     margin-block: unset;
 }
+figure{
+    margin-block-start: unset;
+    margin-block-end: unset;
+    margin-inline-start: unset;
+    margin-inline-end: unset;
+}
+input{
+    box-sizing:border-box;
+}

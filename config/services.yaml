@@ -20,6 +20,16 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
             - '../src/Tests/'
+    invitation_manager:
+        class: App\Service\InvitationManager\InvitationManager
+        arguments:
+            - '@invitation_sender'
+
+    invitation_sender:
+        class: App\Service\InvitationManager\InvitationSenderBaseDecorator
+
+    App\Service\InvitationManager\InvitationManagerInterface\InvitationManagerInterface: '@invitation_manager'
+    App\Service\invitationManager\InvitationManagerInterface\InvitationSenderInterface: '@invitation_sender'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

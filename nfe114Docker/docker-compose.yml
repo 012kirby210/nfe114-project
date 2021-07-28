@@ -9,6 +9,7 @@ services:
       - php_fpm
     ports:
       - 8000:80
+
   php_fpm:
     image: php7.3-fpm-xdebug
     volumes:
@@ -16,9 +17,22 @@ services:
       - "./config/php.ini:/usr/local/etc/php/conf.d/custom.ini"
     depends_on:
       - database_service
+
   database_service:
     image: amd64/mariadb
     environment:
       MYSQL_ROOT_PASSWORD: root
     ports:
       - "3306:3306"
+  mercure_service:
+    image: dunglas/mercure
+    environment:
+      MERCURE_PUBLISHER_JWT_KEY: '!ChangeMe!'
+      MERCURE_SUBSCRIBER_JWT_KEY: '!ChangeMe!'
+      ALLOW_ANONYMOUS: 1
+    ports:
+      - 3000:80
+      - 3443:443
+    volumes:
+      - "./config/caddy_data:/data"
+      - "./config/caddy_config:/config"

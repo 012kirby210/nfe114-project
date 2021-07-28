@@ -101,17 +101,26 @@ class AppFixtures extends Fixture
 
         $conversation = $conversations[0];
 
-        var_dump($profile1->getUsername());
-        var_dump($conversation->getTitre());
+        $invitationStates = ['pending','canceled','accepted'];
+        foreach ($invitationStates as $invitationState){
+            $invitation = new Invitation();
+            $invitation->setGuest($profile2);
+            $invitation->setHost($profile1);
+            $invitation->setUpdateDatetime(date('Y-m-d H:i:s',time()));
+            $invitation->setEtat($invitationState);
+            $invitation->setConversation($conversation);
+            $manager->persist($invitation);
+        }
 
         $invitation = new Invitation();
-        $invitation->setGuest($profile2);
-        $invitation->setHost($profile1);
+        $invitation->setGuest($profile1);
+        $invitation->setHost($profile2);
         $invitation->setUpdateDatetime(date('Y-m-d H:i:s',time()));
-        $invitation->setEtat('pending');
+        $invitation->setEtat($invitationState);
         $invitation->setConversation($conversation);
-
         $manager->persist($invitation);
+
+
         $manager->flush();
     }
 }

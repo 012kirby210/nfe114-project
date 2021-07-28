@@ -1,32 +1,33 @@
 {% for invitation in invitations %}
-{% set border_color_mark="jaune-tag" %}
-{% set picture_file_path="/public/build/images/avatar_default_512px.dd61314f.png" %}
-{% if invitation.etat == "accepted" %}
-    {% set border_color_mark="vert-tag" %}
-{% endif %}
+
+    {% set picture_file_path="build/images/avatar_default_512px.png" %}
+
 <div id="invitation-sending-container-id" class="flex-row justify-start full-width margin-bottom-md margin-top-lg">
-    <div class="flex-col width-03 {{ border_color_mark }} box-sizing-border">
+    <div class="flex-col width-03 min-width-03 {{ invitation.etat }}-tag box-sizing-border">
 
     </div>
     <div class="flex-col width-97 box-sizing-border">
         <div class="flex-row justify-space-between align-center text-align-left padding-top-sm padding-left-sm ">
-            <figure>
-
-                {% if invitation.guest.picture|length == 0 %}
-                    {% set picture_file_path="/public/uploads/"~invitation.guest.picture %}
+            <figure class="width-20 ">
+                {% if invitation.guest.Picture|length != 0 %}
+                    {% set picture_file_path="uploads/"~invitation.guest.Picture %}
                 {% endif %}
-                <img src="{{ asset(picture_file_path) }}"/>
+                <img class="width-100" src="{{ asset(picture_file_path) }}"/>
             </figure>
-            <div>
-                {{ invitation.guest.first_name ~ " " ~ invitation.guest.last_name }}
+            <div class="width-60 font-roboto font-size-md padding-left-md">
+                {{ invitation.guest.FirstName ~ " " ~ invitation.guest.LastName }}
             </div>
-            {% if invitation.etat == "pending" %}
-                <div class="flex-row justify-start align-start text-align-center">
-                    En attente
-                </div>
-            {% endif %}
+            <div class="flex-row justify-center width-20 color-{{ invitation.etat }} font-size-xs font-alata upper-case">
+                {{ invitation.nomEtat }}
+            </div>
         </div>
-
+        {% if invitation.etat == 'pending' %}
+        <div class="flex-row justify-start padding-left-sm padding-top-md">
+            <button class=" cancel-invitation-button button-jaune font-alata font-size-sm padding-top-md padding-bottom-md padding-left-xl padding-right-xl rounded-border upper-case">
+                ANNULER
+            </button>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endfor %}

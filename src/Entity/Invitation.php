@@ -154,4 +154,5 @@ class Invitation
 
         return $this;
     }
+
 }

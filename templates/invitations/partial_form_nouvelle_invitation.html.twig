@@ -13,7 +13,7 @@
             {{ form_errors(invitation_sending_form.guest_uuid) }}
             {{ form_widget(invitation_sending_form.guest_uuid,{
                 'attr': {
-                    'class': 'font-size-text color-blue border-color-blue font-roboto rounded-border min-height-2rem full-width',
+                    'class': 'box-sizing-border font-size-text color-blue border-color-blue font-roboto rounded-border min-height-2rem full-width',
                     'placeholder': 'identifiant du participant'
                 },
                 'value': invitation_sending_form.guest_uuid.vars.value,
@@ -21,7 +21,7 @@
             {{ form_widget(invitation_sending_form.invitation_submit,{
                 'label': 'Inviter',
                 'attr': {
-                    'class': 'font-size-link font-alata upper-case color-blue button padding-md invite-sending-button margin-top-lg',
+                    'class': 'send-invitation-button font-size-link font-alata upper-case color-blue button padding-md invite-sending-button margin-top-lg',
                     'data-href': path('inviter_participant')
                 }
             }) }}

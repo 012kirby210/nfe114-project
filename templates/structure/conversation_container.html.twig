@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="flex-row width-100 justify-start">
+        <aside class="flex-col justify-start width-30 left-panel">
+            {% include 'profile/_profile.html.twig' %}
+            {% include 'structure/actions_menu.html.twig' %}
+            {# liste des conversations #}
+            {# others include there #}
+        </aside>
+        <aside class="flex-col justify-start width-70 right-panel box-sizing-border padding-left-md">
+            <div class="interaction-content-container width-100">
+                {% block conversation_container_action_section %}
+                {% endblock %}
+            </div>
+        </aside>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('conversation') }}
+{% endblock %}

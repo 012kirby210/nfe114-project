@@ -8,3 +8,13 @@
     background-color: #85A0FF;
     color: white;
 }
+.button-jaune {
+    background-color: white;
+    color: #ffc97f;
+    border: 1px solid #ffc97f;
+}
+.button-jaune:hover {
+    background-color: #ffc97f;
+    color: white;
+    cursor: pointer;
+}

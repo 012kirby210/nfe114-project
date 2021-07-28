@@ -7,6 +7,7 @@ use App\Entity\Invitation;
 use App\Form\EditionConversationFormType;
 use App\Form\InvitationSendingFormType;
 use App\Form\NouvelleConversationFormType;
+use App\Repository\ConversationRepository;
 use App\Repository\InvitationRepository;
 use App\Repository\ProfileRepository;
 use App\Repository\UserRepository;
@@ -34,6 +35,91 @@ class ConversationController extends AbstractController
         return $this->render('conversation/conversation.html.twig', [
             'controller_name' => 'ConversationController',
         ]);
+    }
+
+    /**
+     * @Route("/mmmIndex", name="mmm_index")
+     * @param Request $request
+     * @return Response
+     */
+    public function mmmIndex(Request $request,
+                             UserRepository $userRepository,
+                             ProfileRepository $profileRepository): Response
+    {
+        $interaction_instance = 'conversation/__edit_conversation.html.twig';
+        $user = $userRepository->findOneBy(['email' => $this->getUser()->getUserIdentifier()]);
+        $profile = $profileRepository->findOneBy(['user' => $user]);
+
+        $conversations = $profile->getOwnedConversations();
+        $conversation = $conversations[0];
+        $invitations = $profile->getSentInvitations();
+
+        $editConversationForm = $this->createForm(EditionConversationFormType::class,['titre'=>$conversation->getTitre()]);
+        $editConversationForm->handleRequest($request);
+
+        return $this->render('conversation/_index_conversation.html.twig',
+            [
+                'profile' => $profile,
+                'interaction_instance' => $interaction_instance,
+                'edition_conversation_form' => $editConversationForm->createView(),
+                'invitations' => $invitations
+                ]);
+    }
+
+    /**
+     * @Route("/conversation/edit/{conversationId<\d+>}"),
+     * @param Request $request
+     * @return Response
+     */
+    public function editConversation(Request $request,
+                                     UserRepository $userRepository,
+                                     ProfileRepository $profileRepository,
+                                     ConversationRepository $conversationRepository,
+                                     string $conversationId):Response
+    {
+        $interaction_instance = 'conversation/__edit_conversation.html.twig';
+        $user = $userRepository->findOneBy(['email' => $this->getUser()->getUserIdentifier()]);
+        $profile = $profileRepository->findOneBy(['user' => $user]);
+        $conversation = $conversationRepository->findOneBy(['id' => $conversationId]);
+        if (!$conversation->getParticipants()->contains($profile))
+        {
+            // redirect to the last know location or stay where you are
+            dump($conversation);
+        }
+
+        //$conversations = $profile->getOwnedConversations();
+        //$conversation = $conversations[0];
+        $invitations = $profile->getSentInvitations();
+        // enrichissement des invitations de la couche présentation
+        // !TODO passer en clean code par injection
+        foreach($invitations as &$invitation){
+            $nomEtat = 'En attente';
+            switch($invitation->getEtat()){
+                case 'canceled':
+                    $nomEtat = 'Déclinée';
+                    break;
+                case 'accepted':
+                    $nomEtat = 'Acceptée';
+                    break;
+                default:
+                    break;
+            }
+            // surchage magique __set
+            $invitation->nomEtat = $nomEtat;
+        }
+        unset($invitation);
+
+        $editConversationForm = $this->createForm(EditionConversationFormType::class,['titre'=>$conversation->getTitre()]);
+        $editConversationForm->handleRequest($request);
+
+        return $this->render('conversation/___edit_conversation.html.twig',
+            [
+                'profile' => $profile,
+                'interaction_instance' => $interaction_instance,
+                'edition_conversation_form' => $editConversationForm->createView(),
+                'invitations' => $invitations,
+                'conversation_id' => $conversation->getId()
+            ]);
     }
 
     /**
@@ -127,15 +213,15 @@ class ConversationController extends AbstractController
                                                      ProfileRepository $profileRepository):Response
     {
         // the conversation Id should be specified in the request :
-        $conversationId = 19;
         $hostUser = $userRepository->findOneBy(['email' => $this->getUser()->getUseridentifier()]);
         $hostProfile = $profileRepository->findOneBy(['user' => $hostUser]);
+        $conversations = $hostProfile->getOwnedConversations();
+        $conversation = $conversations[0];
         $invitations = $hostProfile->getSentInvitations();
-        dump($invitations);
-        $editConversationForm = $this->createForm(EditionConversationFormType::class);
+        $editConversationForm = $this->createForm(EditionConversationFormType::class,['titre'=>$conversation->getTitre()]);
         $editConversationForm->handleRequest($request);
         if ($editConversationForm->isSubmitted()){
-            // do something ?
+
         }
         return $this->render("conversation/_edit_conversation.html.twig",
             [
@@ -205,18 +291,4 @@ class ConversationController extends AbstractController
         return new Response();
     }
 
-    /**
-     * @Route("edit_conversation",name="edit_conversation")
-     * @param Request $request
-     * @return Response
-     */
-    public function editConversation(Request $request): Response
-    {
-        // construit l'interface d'édition de la conversation pour l'utilisateur :
-        // affiche le titre, le titre est modifiable pour le propriétaire de la conversation.
-
-        // affiche la liste des invitations envoyées par l'utilisateur accédant à la page et les réponses/états.
-
-        // affiche l'interface d'invitation.
-    }
 }

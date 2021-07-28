@@ -1,10 +1,12 @@
-{% extends "base.html.twig" %}
-
-{% block body %}
+{% extends 'structure/conversation_container.html.twig' %}
+{% block conversation_container_action_section %}
 <div class="edit-conversation-container">
     <div class="edit-conversation-container__conversation-title">
         <div class="flex-col justify-start align-start text-align-left form-text-field-container padding-top-sm">
-            {{ form_start(edition_conversation_form) }}
+            {{ form_start(edition_conversation_form,
+                {'method':'POST',
+                'attr':{'class':'width-100'}}
+            ) }}
             {{ form_label(edition_conversation_form.titre,null,
                 {
                     'label_attr':{'class': 'color-violet font-size-label font-condensed'},
@@ -13,12 +15,14 @@
             }}
             {{ form_widget(edition_conversation_form.titre,{
                 'attr': {
-                    'class': 'font-size-text color-blue border-none font-roboto capitalized rounded-border',
+                    'class': 'box-sizing-border font-size-text color-blue border-none font-roboto capitalized rounded-border',
                     'placeholder': 'Titre'
                 },
                 'value': edition_conversation_form.titre.vars.value,
             }) }}
+            <div class="flex-col justify-start align-start text-align-left max-height-40vh overflow-scroll">
             {% include('invitations/_partial_invitation_presentation.html.twig') %}
+            </div>
             {% set invitation_sending_form=edition_conversation_form.invitation_form %}
             {{ include('invitations/_form_nouvelle_invitation.html.twig') }}
             {{ form_widget(edition_conversation_form.valider,{
@@ -34,3 +38,4 @@
     </div>
 </div>
 {% endblock %}
+

@@ -5,10 +5,57 @@ import jquery from 'jquery';
 let $ = jquery;
 
 document.addEventListener('DOMContentLoaded',(event) => {
-   Conversations.setNouvelleConversationAjaxLogicHandler();
+   //Conversations.setNouvelleConversationAjaxLogicHandler();
+   Conversations.handleFormSubmit();
+   Conversations.handleCancelInvitationEvent();
+   Conversations.handleSendInvitationEvent();
 });
 
 let Conversations = {
+
+   handleFormSubmit: function(){
+      document.querySelector('form[name=edition_conversation_form]').addEventListener('submit', (event) => {
+         event.stopPropagation();
+         event.preventDefault();
+         console.log('the form is submitted');
+         return false;
+      });
+   },
+
+   handleCancelInvitationEvent: function(){
+      document.querySelector('.cancel-invitation-button').addEventListener('click', (event)=>{
+         event.preventDefault();
+         event.stopPropagation();
+         console.log('cancel-button is clicked');
+         //return false;
+      });
+   },
+
+   handleSendInvitationEvent: function() {
+      document.querySelector('.invite-sending-button').addEventListener('click', (event) => {
+         event.stopPropagation();
+         event.preventDefault();
+
+         let $target = $(event.target);
+         console.log("valeur de uuid : " + $('#edition_conversation_form_invitation_form_guest_uuid').val());
+         let ressourceUrl = $target.closest('#invitation-sending-container-id').attr('data-href');
+         $.ajax(ressourceUrl,{
+            method: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            data:{
+               guest_uuid: $('#edition_conversation_form_invitation_form_guest_uuid').val()
+            },
+            success: (data, textStatus, jqXHR) => {
+               let remplacementHtml = JSON.parse(data.html);
+               $("#invitation-sending-container-id").replaceWith(remplacementHtml);
+            },
+            error: (jqXhr, textStatus, errorThrown) => {
+               $target.parent().siblings('label').next().replaceWith(jqXhr.responseJSON.html);
+            }
+         });
+         console.log('send-button is clicked');
+      })
+   },
 
    setNouvelleConversationAjaxLogicHandler: function(){
 

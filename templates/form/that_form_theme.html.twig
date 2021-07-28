@@ -55,7 +55,7 @@
     {%- if disabled %} disabled="disabled"{% endif -%}
     {%- if required %} required="required"{% endif -%}
     {% if type == "text" %}
-        {% set initial_classes = "padding-left-sm font-size-text color-blue border-color-blue font-roboto rounded-border min-height-2rem full-width" %}
+        {% set initial_classes = "padding-left-sm font-size-text color-blue border-color-blue font-roboto rounded-border min-height-2_5rem full-width" %}
     {% endif %}
     {{ block('attributes') }}
 {%- endblock widget_attributes -%}
@@ -84,11 +84,13 @@
 {%- endblock attributes -%}
 
 {% block error_container_attribute %}
+    {%  set container_attr = container_attr|default({})%}
     {% for attr_name,attr_value in container_attr %}
         {{- attr_name -}}="{{- attr_value -}}"
     {% endfor %}
 {% endblock %}
 {% block error_item_attribute %}
+    {%  set contained_attr = contained_attr|default({})%}
     {% for attr_name,attr_value in contained_attr %}
         {{- attr_name -}}="{{- attr_value -}}"
     {% endfor %}

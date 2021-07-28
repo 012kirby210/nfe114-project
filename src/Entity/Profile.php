@@ -6,6 +6,7 @@ use App\Repository\ProfileRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -283,4 +284,20 @@ class Profile
 
         return $this;
     }
+
+    public function hasAlreadySentTheInvitation(Invitation $invitation):bool
+    {
+        $alreadySentInvitation = false;
+        $sentInvitations = $this->getSentInvitations();
+        foreach ($sentInvitations as $sentInvitation){
+            $alreadySentInvitation = (
+                ($sentInvitation->getHost() === $invitation->getHost()) &&
+                ($sentInvitation->getGuest() === $invitation->getGuest()) &&
+                ($sentInvitation->getEtat() === 'pending')
+            );
+            if ($alreadySentInvitation) break;
+        }
+        return $alreadySentInvitation;
+    }
+
 }

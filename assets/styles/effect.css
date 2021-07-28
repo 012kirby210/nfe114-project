@@ -4,3 +4,8 @@
 .not-displayed {
     display:none;
 }
+
+.on-hover-subline:hover{
+    border-bottom: 1px solid #DA79E8;
+    cursor: pointer;
+}
