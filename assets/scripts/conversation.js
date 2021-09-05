@@ -23,12 +23,17 @@ let Conversations = {
    },
 
    handleCancelInvitationEvent: function(){
-      document.querySelector('.cancel-invitation-button').addEventListener('click', (event)=>{
-         event.preventDefault();
-         event.stopPropagation();
-         console.log('cancel-button is clicked');
-         //return false;
-      });
+      let cancelInvitationButtons = document.getElementsByClassName('.cancel-invitation-button');
+      // juste pour gérer le premier élément
+      // !TODO à reprendre génériquement
+      if (cancelInvitationButtons.length !== 0) {
+         document.querySelector('.cancel-invitation-button').addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            console.log('cancel-button is clicked');
+            //return false;
+         });
+      }
    },
 
    handleSendInvitationEvent: function() {

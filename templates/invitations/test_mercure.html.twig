@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        const url = new URL('https://localhost/.well-known/mercure');
+        url.searchParams.append('topic', 'https://example.com/profile');
+
+        const eventSource = new EventSource(url);
+
+        eventSource.onmessage = (event) => {
+            const element = document.querySelector('#response-display');
+            console.log(event);
+            element.textContent = event.data;
+        };
+
+    </script>
+{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+    <h1 class="font-condensed upper-case font-size-lg">
+        Page de test du protocole mercure
+    </h1>
+    <div class="margin-top-md color-blue font-condensed font-size-md">
+        Réponse du serveur :
+    </div>
+    <div class="margin-top-sm color-violet font-roboto font-size-md" id="response-display">
+
+    </div>
+{% endblock %}

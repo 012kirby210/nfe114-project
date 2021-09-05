@@ -25,8 +25,12 @@ services:
         arguments:
             - '@invitation_sender'
 
+    # service to send invitation
+    App\Service\invitationManager\InvitationSenderBaseDecorator: ~
+    # decorating service to send invitation + handling the mercure topic synchronisation
     invitation_sender:
-        class: App\Service\InvitationManager\InvitationSenderBaseDecorator
+        class: App\Service\InvitationManager\InvitationSenderMercureDecoration
+        decorates: App\Service\InvitationManager\InvitationSenderBaseDecorator
 
     App\Service\InvitationManager\InvitationManagerInterface\InvitationManagerInterface: '@invitation_manager'
     App\Service\invitationManager\InvitationManagerInterface\InvitationSenderInterface: '@invitation_sender'

@@ -19,3 +19,6 @@ import './styles/reset.css';
 // start the Stimulus application
 import './bootstrap';
 
+// import the global
+import './scripts/global.js';
+

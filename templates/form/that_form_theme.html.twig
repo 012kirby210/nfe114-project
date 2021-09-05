@@ -1,6 +1,6 @@
 {% block text_widget %}
     {% set type = "text" %}
-    <div class="flex-col justify-start align-start text-align-left form-text-field-container padding-top-sm padding-left-sm full-width">
+    <div class="box-sizing-border flex-col justify-start align-start text-align-left form-text-field-container padding-top-sm padding-left-sm full-width">
         <input {{ block('widget_attributes') }} type="{{ type }}" {% if value is not empty %} value="{{ value }}" {% endif %}/>
     </div>
 {% endblock %}

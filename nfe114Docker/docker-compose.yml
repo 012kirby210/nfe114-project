@@ -29,10 +29,14 @@ services:
     environment:
       MERCURE_PUBLISHER_JWT_KEY: '!ChangeMe!'
       MERCURE_SUBSCRIBER_JWT_KEY: '!ChangeMe!'
-      ALLOW_ANONYMOUS: 1
+      SERVER_NAME: :80
+    command:
+      caddy run -config /config/Caddyfile
     ports:
       - 3000:80
       - 3443:443
+      - 2019:2019
     volumes:
       - "./config/caddy_data:/data"
       - "./config/caddy_config:/config"
+      - "../var/log:/mercure_log"

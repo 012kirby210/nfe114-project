@@ -1,21 +1,28 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    <div class="flex-row width-100 justify-start">
-        <aside class="flex-col justify-start width-30 left-panel">
+    <div class="flex-row width-100 justify-start position-relative">
+        <aside id="aside-panel" class="flex-col justify-start width-30 left-panel">
             {% include 'profile/_profile.html.twig' %}
             {% include 'structure/actions_menu.html.twig' %}
             {# liste des conversations #}
             {# others include there #}
         </aside>
-        <aside class="flex-col justify-start width-70 right-panel box-sizing-border padding-left-md">
+        <aside id="main-panel" class="flex-col justify-start width-70 right-panel box-sizing-border padding-left-md">
             <div class="interaction-content-container width-100">
                 {% block conversation_container_action_section %}
                 {% endblock %}
             </div>
         </aside>
     </div>
+    {% include 'structure/display_panel_button.html.twig' %}
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('conversation') }}
+    <script>
+        const mercureUrl = new URL('http://localhost:3000/.well-known/mercure');
+        mercureUrl.searchParams.append('topic','https://localhost/profile/{{ profile.user.id }}/invitations');
+        const eventSource = new EventSource(mercureUrl);
+        eventSource.onmessage = (e) => { console.log("Nouveau message reçu"); console.log(e); };
+    </script>
 {% endblock %}

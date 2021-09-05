@@ -119,3 +119,60 @@
 .overflow-scroll{
     overflow: scroll;
 }
+#display-panel{
+    z-index: -10;
+    position: absolute;
+    top: -100%;
+}
+@media screen and (max-width: 880px){
+    #global-container{
+        width:90%;
+    }
+    #aside-panel{
+        width:100%;
+        transform:translateX(-150%);
+        position:fixed;
+        top:0;
+        left:0;
+        transition-property: transform;
+        transition-duration:1s;
+        z-index: 2;
+        padding: 1rem;
+        border: 1px solid grey;
+        border-radius: 5px;
+        background-color: white;
+        box-sizing:border-box;
+    }
+    #aside-panel.active{
+        transform:translateX(0);
+    }
+    #main-panel{
+        width:100%;
+    }
+    #display-panel{
+        transition-property: transform;
+        transition-duration: 500ms;
+        z-index:3;
+        position: fixed;
+        top:unset;
+        bottom: 50px;
+        right: 50px;
+    }
+    #display-panel::after{
+        content: " ";
+        width: 50px;
+        height: 50px;
+        background-color: white;
+        border: 2px solid blue;
+        border-radius: 50%;
+        position: absolute;
+        z-index:-1;
+        top:50%;
+        left:50%;
+        transform: translate(-50%,-50%);
+        cursor: pointer;
+    }
+    #display-panel.active{
+        transform: rotate(90deg);
+    }
+}

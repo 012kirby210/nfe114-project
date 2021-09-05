@@ -83,8 +83,8 @@ class ConversationController extends AbstractController
         $conversation = $conversationRepository->findOneBy(['id' => $conversationId]);
         if (!$conversation->getParticipants()->contains($profile))
         {
-            // redirect to the last know location or stay where you are
-            dump($conversation);
+            // the user has nothing to do here
+
         }
 
         //$conversations = $profile->getOwnedConversations();

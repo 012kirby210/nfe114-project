@@ -19,6 +19,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mercure\HubInterface;
+use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Annotation\Route;
 
 
@@ -93,5 +96,20 @@ class InvitationController extends AbstractController
                 'conversation'=>$conversation,
                 'conversation_id'=>$conversation->getId()
             ]),$messageStatusCode]);
+    }
+
+    /**
+     * @Route("/testMercure", name="test_mercure")
+     * @param Request $request
+     * @return Response
+     */
+    public function testMercureOnPage(Request $request,
+                                      HubInterface $hubInterface, LoggerInterface $lucLogger) :Response
+    {
+        $update = new Update('https://serveur_de_ressource.com/ressource',json_encode(['status'=>'nouveau status']));
+        //try{ $hubInterface->publish($update); }catch(\Exception $e){$lucLogger->info("exception message : " . $e->getMessage());}
+        $hubInterface->publish($update);
+
+        return $this->render('invitations/test_mercure.html.twig');
     }
 }

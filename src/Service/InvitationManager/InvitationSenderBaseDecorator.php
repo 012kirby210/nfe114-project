@@ -27,6 +27,7 @@ class InvitationSenderBaseDecorator implements InvitationManagerInterface\Invita
 
     public function send(Profile $host, Profile $guest, Conversation $conversation)
     {
+        $this->lucLogger->info("Entering into the decorated service");
         if (!$host->getOwnedConversations()->contains($conversation)){
             throw new NotOwnedConversationException('cannot invite on a conversation not owned.');
         }
@@ -43,6 +44,7 @@ class InvitationSenderBaseDecorator implements InvitationManagerInterface\Invita
             ->setCreateDatetime(date('Y-m-d H:i:s',time()));
 
         if ($host->hasAlreadySentTheInvitation($invitation)){
+            $this->lucLogger->info('Already invited is triggered');
             throw new AlreadySentInvitationException('is already invited.');
         }
 
@@ -50,5 +52,6 @@ class InvitationSenderBaseDecorator implements InvitationManagerInterface\Invita
         $host->addSentInvitation($invitation);
         $this->em->persist($host);
         $this->em->flush();
+        $this->lucLogger->info('getting out of the decorated service');
     }
 }
